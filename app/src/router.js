@@ -29,6 +29,11 @@ export default new Router({
     //   component: () => import('./views/EmployeeView.vue')
     // },
     {
+      path: '/chat',
+      name: 'chat',
+      component: () => import('./views/Chat.vue')
+    },
+    {
       path: '/secret-board',
       name: 'secretBoard',
       component: () => import('./views/SecretBoard.vue')

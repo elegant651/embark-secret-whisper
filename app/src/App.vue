@@ -23,9 +23,9 @@
       <v-toolbar-title>Secure Messanger</v-toolbar-title> 
     </v-app-bar>
     <v-content>
-      <v-container fluid class="fill-height">
+      <!-- <v-container fluid class="fill-height"> -->
         <router-view/>
-      </v-container>
+      <!-- </v-container> -->
     </v-content>    
   </v-app>
 </template>
@@ -35,9 +35,7 @@
     data: () => ({ 
       items: [
         { text: 'Home', route: '/' },
-        // { text: 'Admin Employees', route: '/admin-employees' },
-        // { text: 'Admin Reviews', route: '/admin-reviews' },
-        // { text: 'Employee View', route: '/employee-view' },
+        { text: 'Chat', route: '/chat'},
         { text: 'Secret Board', route: '/secret-board' }
       ]      
     })    
