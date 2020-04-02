@@ -31,7 +31,7 @@ export default {
       'allItems'
     ])
   },
-  async mounted() {    
+  async mounted() {
     await WhisperService.init()    
     await WhisperService.sendPublicMsg({title: "testtete"})
 

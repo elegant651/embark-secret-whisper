@@ -2,7 +2,7 @@
   <div class="chatcomp">    
     <div class="chatWrapper">
       <v-list class="messages" three-line v-chat-scroll>
-        <template v-for="(msg, index) in items"> 
+        <template v-for="(msg, index) in allItems"> 
           <v-list-item
             :key="index"            
             :class="getChatItemClass(msg.myturn)"
@@ -39,11 +39,11 @@ export default {
   components: {
   },
 
-  data() {
-    return {
-      items: []      
-    }
-  },
+  // data() {
+  //   return {
+  //     items: []      
+  //   }
+  // },
 
   async mounted() {
     // await this.getPartyChats()
@@ -55,6 +55,9 @@ export default {
     ]),
     ...mapGetters('room', [
       'roomInfo'
+    ]),
+    ...mapGetters('message', [
+      'allItems'
     ])
   },
 

@@ -8,8 +8,8 @@
       <v-card class="rightPanel align-center justify-center" tile outlined>
         <ChatHeaderPart />
         
-        <v-layout row class="d-flex justify-space-between" style="width: 100%; flex: 1; height: 80%">
-          <ChatGroupBox style="flex: 1;" />          
+        <v-layout row class="d-flex justify-space-between" style="width: 100%; height: 60%">
+          <ChatGroupBox />          
         </v-layout>
         
         <div class="bottomWrapper pl-5 pr-5">
@@ -31,6 +31,10 @@
 </template>
 
 <script>
+import Web3 from 'web3'
+const web3 = new Web3();
+
+import * as WhisperService from '@/services/WhisperService'
 import ChatHeaderPart from '@/components/chat/ChatHeaderPart'
 import CommonLeftPanel from '@/components/chat/CommonLeftPanel'
 import ChatGroupBox from '@/components/chat/ChatGroupBox'
@@ -59,6 +63,10 @@ export default {
     //   this.$router.push('/')
     //   return
     // }
+
+    await WhisperService.init()    
+
+    this.onSubscribe()
   },
   computed: {
     ...mapGetters('profile', [
@@ -74,12 +82,21 @@ export default {
       'addItem'
     ]),
 
-    sendMessage() {
+    async sendMessage() {
       if(!this.message) return
-      this.isLoading = true
+      this.isLoading = true      
 
-      const roomId = this.roomInfo.id
-      if(!roomId) return
+      // const roomId = this.roomInfo.id
+      // if(!roomId) return
+
+      try {
+        await this.createItem({content: this.message})  
+      } catch(e) {
+        console.error(e)
+      }
+      
+      this.isLoading = false
+      this.message = ''
 
       // const db = firebase.firestore()
       // db.collection("messages_forweb").doc(roomId).collection('chats').add({
@@ -97,6 +114,30 @@ export default {
       //   this.isLoading = false
       // })      
     },
+
+    async onSubscribe () {
+      WhisperService.subscribePublicMsg((data) => {        
+        const content = web3.utils.toUtf8(data.payload)
+
+        const jsonObj = JSON.parse(content)
+        this.addContent(jsonObj)
+      })
+    },
+
+    async addContent (obj) {
+      const item = {
+        uuid: 'uuid',
+        nickname: 'nickname',
+        content: obj.content,
+        created_at: new Date()
+      }
+      this.addItem(item)
+    },
+
+    async createItem (item) {      
+      // this.addContent(item.title) 
+      await WhisperService.sendPublicMsg(item)
+    },
   }
 }
 
@@ -110,7 +151,7 @@ export default {
   background-color: #D3D3D3; 
   display: flex;
   flex-flow: column;
-  height: 100vh;
+  height: 92vh;
 }
 
 /* bottom input */

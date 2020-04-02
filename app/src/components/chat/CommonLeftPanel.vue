@@ -1,5 +1,5 @@
 <template>
-  <v-card class="leftPanel d-flex align-center justify-center" style="height: 100vh;" dark tile outlined>
+  <v-card class="leftPanel d-flex align-center justify-center" style="height: 92vh;" dark tile outlined>
     <div>
       <h1>Inssa Network</h1>
       <h4 class="mt-3">Realtime inssa chat</h4>

@@ -40,7 +40,7 @@ export async function sendPublicMsg(msg) {
     sig: keyPair,
     ttl: TTL,
     topic: channelTopic,
-    payload: web3.utils.fromAscii(msg),
+    payload: web3.utils.fromUtf8(msg),
     powTime: POW_TIME,
     powTarget: POW_TARGET
   })
