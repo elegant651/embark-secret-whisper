@@ -57,10 +57,23 @@ module.exports = {
     // filteredFields: [],
 
     contracts: {
-      // example:
-      //SimpleStorage: {
-      //  args: [ 100 ]
-      //}
+      // OpenZeppelin contracts
+      "AddressUtils": { "deploy": false },
+      "SafeMath": { "deploy": false },
+      "ERC721Token": { "deploy": false },
+      "ERC721BasicToken": { "deploy": false },
+      "ERC721Holder": { "deploy": false },
+      "Ownable": { "deploy": false },
+      //
+      Auctions: {
+        args: ['$MyNFT']
+      },
+      MyNFT: {
+        args: ["InssaToken", "INSSA"]
+      },
+      ERC721Token: {
+        args: ["InssaToken", "INSSA"]
+      }
     }
   },
 
