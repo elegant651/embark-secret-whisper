@@ -17,7 +17,7 @@ Vue.mixin({
     try {
       await ethereum.enable()
 
-      this.$web3 = new Web3(ethereum)      
+      this.$web3 = new Web3(ethereum)
 
       this.$getDefaultAccount = () => {
         return new Promise((resolve, reject) => {
