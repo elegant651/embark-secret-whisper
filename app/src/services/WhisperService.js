@@ -13,7 +13,7 @@ const web3 = new Web3();
 let keyPair, pubKey, channelSymKey = null
 let channelTopic = DEFAULT_TOPIC
 
-const PROVIDER_PRIVNET_URI = 'ws://127.0.0.1:8546'
+const PROVIDER_PRIVNET_URI = `ws://${process.env.VUE_APP_WHISPER_HOST}:8546`
 const PROVIDER_TESTNET_URI = `wss://ropsten.infura.io/ws/v3/${process.env.VUE_APP_INFURA_KEY}`
 
 export async function init() {
