@@ -9,7 +9,7 @@ TBD...
 ## Embark setup
 ```
 npm install -g embark
-embark run --noserver
+embark run testnet --noserver
 ```
 
 ## Frontend Project setup

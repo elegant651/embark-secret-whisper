@@ -7,3 +7,5 @@ dist
 embarkArtifacts
 node_modules
 .DS_Store
+secrets.json
+.env

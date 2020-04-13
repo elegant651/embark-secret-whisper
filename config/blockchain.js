@@ -1,3 +1,9 @@
+const fs = require('fs')
+let secrets
+if(fs.existsSync('secrets.json')) {
+  secrets = JSON.parse(fs.readFileSync('secrets.json', 'utf8'))
+}
+
 module.exports = {
   // applies to all environments
   default: {
@@ -118,12 +124,10 @@ module.exports = {
   // merges with the settings in default
   // used with "embark run testnet" and/or "embark blockchain testnet"
   testnet: {
-    networkType: "testnet",
-    syncMode: "light",
+    endpoint: 'https://ropsten.infura.io/v3/'+ secrets.infuraApiKey,
     accounts: [
       {
-        nodeAccounts: true,
-        password: "config/testnet/password"
+        "mnemonic": secrets.mnemonic
       }
     ]
   },
@@ -136,8 +140,7 @@ module.exports = {
     rpcCorsDomain: "http://localhost:8000",
     wsOrigins: "http://localhost:8000",
     accounts: [
-      {
-        nodeAccounts: true,
+      {        
         password: "config/livenet/password"
       }
     ]

@@ -13,9 +13,12 @@ const web3 = new Web3();
 let keyPair, pubKey, channelSymKey = null
 let channelTopic = DEFAULT_TOPIC
 
+const PROVIDER_PRIVNET_URI = 'ws://127.0.0.1:8546'
+const PROVIDER_TESTNET_URI = `wss://ropsten.infura.io/ws/v3/${process.env.VUE_APP_INFURA_KEY}`
+
 export async function init() {
   try {
-    web3.setProvider(new Web3.providers.WebsocketProvider("ws://127.0.0.1:8546", {headers: {Origin: "mychat"}}));
+    web3.setProvider(new Web3.providers.WebsocketProvider(PROVIDER_PRIVNET_URI, {headers: {Origin: "mychat"}}));
     await web3.eth.net.isListening();
   } catch(e) {
     console.error(e)
