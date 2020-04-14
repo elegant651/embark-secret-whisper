@@ -24,11 +24,6 @@ module.exports = {
   // merges with the settings in default
   // used with "embark run testnet"
   testnet: {
-    connection: {
-      host: "211.43.12.115", // Host of the blockchain node
-      port: 8546, // Port of the blockchain node
-      type: "ws" // Type of connection (ws or rpc)
-    }
   },
 
   // merges with the settings in default
