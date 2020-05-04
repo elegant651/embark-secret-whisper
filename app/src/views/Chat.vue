@@ -31,13 +31,14 @@
 </template>
 
 <script>
-import Web3 from 'web3'
-const web3 = new Web3();
+// import Web3 from 'web3'
+// const web3 = new Web3();
 
 import * as WhisperService from '@/services/WhisperService'
 import ChatHeaderPart from '@/components/chat/ChatHeaderPart'
 import CommonLeftPanel from '@/components/chat/CommonLeftPanel'
 import ChatGroupBox from '@/components/chat/ChatGroupBox'
+import {decodeFromHex, encodeToHex} from '../util/hexutils'
 
 
 import { mapMutations, mapGetters } from 'vuex'
@@ -116,8 +117,9 @@ export default {
     },
 
     async onSubscribe () {
-      WhisperService.subscribePublicMsg((data) => {        
-        const content = web3.utils.toUtf8(data.payload)
+      WhisperService.subscribePublicMsg((data) => {
+        console.log('dataa', data)
+        const content = decodeFromHex(data.payload)
 
         const jsonObj = JSON.parse(content)
         this.addContent(jsonObj)

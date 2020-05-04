@@ -12,23 +12,23 @@ Vue.config.productionTip = false
 
 Vue.mixin({
   async created() {  	
-    console.log(await ethereum.send('net_version'))
+    // console.log(await ethereum.send('net_version'))
 
-    await ethereum.enable()
+    // await ethereum.enable()
 
-    this.$web3 = new Web3(ethereum)
+    // this.$web3 = new Web3(ethereum)
 
-    this.$getDefaultAccount = () => {
-      return new Promise((resolve, reject) => {
-        this.$web3.eth.getAccounts((err, data) => {
-          if(!err) {
-            this.$web3.eth.defaultAccount = data[0]
-            resolve(data[0])
-          }
-          reject(err)
-        })
-      })
-    }
+    // this.$getDefaultAccount = () => {
+    //   return new Promise((resolve, reject) => {
+    //     this.$web3.eth.getAccounts((err, data) => {
+    //       if(!err) {
+    //         this.$web3.eth.defaultAccount = data[0]
+    //         resolve(data[0])
+    //       }
+    //       reject(err)
+    //     })
+    //   })
+    // }
 
     try {
       if (window.ethereum.isStatus) {
