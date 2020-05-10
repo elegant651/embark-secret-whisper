@@ -31,14 +31,10 @@
 </template>
 
 <script>
-// import Web3 from 'web3'
-// const web3 = new Web3();
-
 import * as WhisperService from '@/services/WhisperService'
 import ChatHeaderPart from '@/components/chat/ChatHeaderPart'
 import CommonLeftPanel from '@/components/chat/CommonLeftPanel'
 import ChatGroupBox from '@/components/chat/ChatGroupBox'
-import {decodeFromHex, encodeToHex} from '../util/hexutils'
 
 
 import { mapMutations, mapGetters } from 'vuex'
@@ -67,7 +63,7 @@ export default {
 
     await WhisperService.init()    
 
-    this.onSubscribe()
+    this.onSubscribeForHttp()    
   },
   computed: {
     ...mapGetters('profile', [
@@ -97,29 +93,20 @@ export default {
       }
       
       this.isLoading = false
-      this.message = ''
-
-      // const db = firebase.firestore()
-      // db.collection("messages_forweb").doc(roomId).collection('chats').add({
-      //   uuid: this.userData.id,
-      //   nickname: this.userData.nickname,
-      //   content: this.message,
-      //   created_at: new Date()
-      // })
-      // .then((docRef) => {
-      //   this.message = '';
-      //   this.isLoading = false
-      // })
-      // .catch((error) => {
-      //   console.error("error:", error)
-      //   this.isLoading = false
-      // })      
+      this.message = ''      
     },
 
-    async onSubscribe () {
-      WhisperService.subscribePublicMsg((data) => {
-        console.log('dataa', data)
-        const content = decodeFromHex(data.payload)
+    async onSubscribeForHttp () {
+      WhisperService.getFilterMsg((data) => {
+        console.log('d',data)
+        // const jsonObj = JSON.parse(data)
+        this.addContent(data)
+      })
+    },
+
+    async onSubscribeForWebsocket () {
+      WhisperService.subscribePublicMsg((data) => {        
+        const content = data.payload
 
         const jsonObj = JSON.parse(content)
         this.addContent(jsonObj)

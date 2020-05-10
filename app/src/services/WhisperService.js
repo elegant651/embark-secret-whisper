@@ -17,21 +17,21 @@ const PROVIDER_PRIVNET_HTTP_URI = `http://${process.env.VUE_APP_WHISPER_HOST}:85
 const PROVIDER_TESTNET_URI = `wss://ropsten.infura.io/ws/v3/${process.env.VUE_APP_INFURA_KEY}`
 
 
-const web3 = new Web3(new Web3.providers.HttpProvider(PROVIDER_PRIVNET_HTTP_URI));
+// const web3 = new Web3(new Web3.providers.HttpProvider(PROVIDER_PRIVNET_HTTP_URI));
+const web3 = new Web3()
 const shh = web3.shh;
 
 export async function init() {
-  // try {
-  //   // web3.setProvider(new Web3.providers.WebsocketProvider(PROVIDER_PRIVNET_URI, {headers: {Origin: "mychat"}}));
-  //   web3.setProvider(new Web3.providers.HttpProvider(PROVIDER_PRIVNET_HTTP_URI));
+  try {
+    // web3.setProvider(new Web3.providers.WebsocketProvider(PROVIDER_PRIVNET_URI, {headers: {Origin: "mychat"}}));
+    web3.setProvider(new Web3.providers.HttpProvider(PROVIDER_PRIVNET_HTTP_URI));
   //   // await web3.eth.net.isListening();
-  // } catch(e) {
-  //   console.error(e)
-  // }
+  } catch(e) {
+    console.error(e)
+  }
 
   // TODO: Generate keypair
   keyPair = await shh.newKeyPair();
-  console.log('kp',keyPair)
 
   // TODO: Obtain public key
   pubKey = await shh.getPublicKey(keyPair);
@@ -40,18 +40,44 @@ export async function init() {
   channelSymKey = await shh.generateSymKeyFromPassword(DEFAULT_CHANNEL);  
 }
 
-export async function sendPublicMsg(msg) {
-  msg = JSON.stringify(msg)
+export async function sendPublicMsg(msg) {  
 
-  // TODO: Send a public message
+  // shh.post({
+  //   pubKey: pubKey,
+  //   sig: keyPair,
+  //   ttl: TTL,
+  //   topic: channelTopic,
+  //   payload: encodeToHex(msg),
+  //   powTime: POW_TIME,
+  //   powTarget: POW_TARGET
+  // })
   shh.post({
     symKeyID: channelSymKey,
     sig: keyPair,
     ttl: TTL,
     topic: channelTopic,
-    payload: encodeToHex(msg),
+    payload: encodeToHex(JSON.stringify(msg)),
     powTime: POW_TIME,
     powTarget: POW_TARGET
+  })  
+}
+
+export async function getFilterMsg(callback) {
+  let filter = {
+    topics: [channelTopic],
+    symKeyID: channelSymKey
+  };
+
+  return shh.newMessageFilter(filter).then(filterId => {
+    // console.log('filterId', filterId)
+    setInterval(() => {
+      shh.getFilterMessages(filterId).then(messages => {
+        for (let msg of messages) {          
+          let message = decodeFromHex(msg.payload);          
+          callback(message)          
+        }
+      });
+    }, 1000);
   })
 }
 
