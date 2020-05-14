@@ -6,24 +6,28 @@
     </v-col>
     <v-col>
       <v-card class="rightPanel align-center justify-center" tile outlined>
-        <ChatHeaderPart />
-        
-        <v-layout row class="d-flex justify-space-between" style="width: 100%; height: 60%">
-          <ChatGroupBox />          
-        </v-layout>
-        
-        <div class="bottomWrapper pl-5 pr-5">
-          <div class="msgContainer mt-1">
-            <v-layout row>
-              <v-text-field solo
-                id="ipMsg" label="Message..." v-model="message" @keypress.enter.native.prevent="sendMessage" 
-              ></v-text-field>
-              <v-btn class="ic_send" @click="sendMessage" style="background-color: #e6e6e6;">
-                †
-              </v-btn>
-            </v-layout>
-          </div>
-        </div>
+        <LoginBox v-if="!isLoggedIn" v-on:login="handleLogin" />
+
+        <template v-else>
+          <ChatHeaderPart />
+
+          <v-layout row class="d-flex justify-space-between" style="width: 100%; height: 60%">          
+            <ChatGroupBox />          
+          </v-layout>
+          
+          <div class="bottomWrapper pl-5 pr-5">
+            <div class="msgContainer mt-1">
+              <v-layout row>
+                <v-text-field solo
+                  id="ipMsg" label="Message..." v-model="message" @keypress.enter.native.prevent="sendMessage" 
+                ></v-text-field>
+                <v-btn class="ic_send" @click="sendMessage" style="background-color: #e6e6e6;">
+                  †
+                </v-btn>
+              </v-layout>
+            </div>
+          </div>  
+        </template>        
       </v-card>
     </v-col>
   </v-row>
@@ -35,7 +39,7 @@ import * as WhisperService from '@/services/WhisperService'
 import ChatHeaderPart from '@/components/chat/ChatHeaderPart'
 import CommonLeftPanel from '@/components/chat/CommonLeftPanel'
 import ChatGroupBox from '@/components/chat/ChatGroupBox'
-
+import LoginBox from '@/components/LoginBox'
 
 import { mapMutations, mapGetters } from 'vuex'
 
@@ -44,7 +48,8 @@ export default {
   components: {
     ChatHeaderPart,
     CommonLeftPanel, 
-    ChatGroupBox
+    ChatGroupBox,
+    LoginBox
   },
   data() {
     return {
@@ -52,7 +57,8 @@ export default {
       channel: null,
       items: [],      
       message: '',
-      isLoading: false
+      isLoading: false,
+      isLoggedIn: false
     }
   },
   async mounted() {
@@ -78,6 +84,15 @@ export default {
       'setItem',
       'addItem'
     ]),
+
+    ...mapMutations('profile', [
+      'setNickname'
+    ]),
+
+    handleLogin(nickname) {
+      this.setNickname(nickname)
+      this.isLoggedIn = true
+    },
 
     async sendMessage() {
       if(!this.message) return
@@ -116,7 +131,7 @@ export default {
     async addContent (obj) {
       const item = {
         uuid: 'uuid',
-        nickname: 'nickname',
+        nickname: this.userData.nickname,
         content: obj.content,
         created_at: new Date()
       }

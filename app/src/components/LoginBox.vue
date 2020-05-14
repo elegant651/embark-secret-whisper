@@ -17,7 +17,7 @@
     ></v-text-field>
   </div>  
 
-  <div class="d-flex justify-center">
+  <!-- <div class="d-flex justify-center">
     <v-text-field
       class="textField"
       v-model="partyCode"
@@ -25,7 +25,7 @@
       solo
       required
     ></v-text-field>
-  </div>
+  </div> -->
     
   <div class="d-flex justify-center">
     <v-btn outlined @click="submit">Sign in</v-btn>
@@ -75,13 +75,13 @@ export default {
         return false
       }
 
-      if (this.partyCode && this.roomInfo && this.partyCode == this.roomInfo.participantCode) {
-        this.$emit('login', 1, this.nickname)
-      } else {
-        this.errorTxt = '입력 필드를 다시 확인해주세요!'
-        this.snackbar = true
-        return false
-      }
+      // if (this.partyCode && this.roomInfo && this.partyCode == this.roomInfo.participantCode) {
+        this.$emit('login', this.nickname)
+      // } else {
+      //   this.errorTxt = '입력 필드를 다시 확인해주세요!'
+      //   this.snackbar = true
+      //   return false
+      // }
     }
   }
 }

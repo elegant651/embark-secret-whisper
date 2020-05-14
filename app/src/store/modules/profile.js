@@ -20,6 +20,9 @@ const getters = {
 }
 
 const mutations = {
+  setNickname(state, nickname) {
+    state.nickname = nickname
+  },
   setData(state, user) {
     state.id = user.userId
     state.nickname = user.nickname
