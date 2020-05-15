@@ -1,11 +1,5 @@
 <template>
-<div>  
-  
-  <div class="btnWrapper">
-    <div class="mb-3"><v-btn height="80" @click="chooseType(0)" color="#45c65b">Join Chat</v-btn></div>    
-  </div>
-
-  <v-divider class="mt-5 mb-4" />
+<div>
   
   <div class="d-flex justify-center">
     <v-text-field
@@ -26,10 +20,10 @@
       required
     ></v-text-field>
   </div> -->
-    
-  <div class="d-flex justify-center">
-    <v-btn outlined @click="submit">Sign in</v-btn>
-  </div>  
+  
+  <div class="btnWrapper">
+    <div class="mb-3"><v-btn height="80" color="#45c65b" @click="submit">Join Chat</v-btn></div>    
+  </div>    
 
   <v-snackbar
       v-model="snackbar" top>
