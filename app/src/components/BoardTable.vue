@@ -57,12 +57,12 @@
       >
         edit
       </v-icon>
-      <v-icon
+      <!-- <v-icon
         small
         @click="deleteItem(item)"
       >
         delete
-      </v-icon>      
+      </v-icon> -->      
     </template>
     
   </v-data-table>

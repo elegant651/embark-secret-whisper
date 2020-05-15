@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import Web3 from 'web3'
-const web3 = new Web3();
 
 import * as WhisperService from '@/services/WhisperService'
 import { mapActions, mapMutations, mapGetters } from 'vuex'
@@ -35,7 +33,7 @@ export default {
     await WhisperService.init()    
     await WhisperService.sendPublicMsg({title: "testtete"})
 
-    this.onSubscribe()
+    this.onSubscribeForHttp()
   },
   methods: {    
     ...mapMutations('board', [
@@ -46,13 +44,20 @@ export default {
       'setContent'
     ]),
 
-    async onSubscribe () {
+    async onSubscribeForHttp () {
+      WhisperService.getFilterMsg((data) => {
+        console.log('d',data)
+        // const jsonObj = JSON.parse(data)
+        this.addContent(data)
+      })
+    },
+
+    async onSubscribeForWebsocket () {
       WhisperService.subscribePublicMsg((data) => {
         // this.addItem(web3.utils.toAscii(data.payload))
-        const content = web3.utils.toAscii(data.payload)
+        const content = data.payload
 
-        const jsonObj = JSON.parse(content)
-        console.log(jsonObj)
+        const jsonObj = JSON.parse(content) 
         this.addContent(jsonObj)
       })
     },
