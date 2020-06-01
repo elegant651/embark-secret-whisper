@@ -61,6 +61,12 @@ import { mapGetters, mapMutations } from 'vuex'
   export default {
     data() {
       return {
+        account: '',
+        balance: null, 
+        
+        ciMyNFT: null,
+        ciAuctions: null,
+
         auctionIds:[],
         toAddress: null,
         selectedAuction: null,
@@ -84,7 +90,16 @@ import { mapGetters, mapMutations } from 'vuex'
     },
 
     async mounted() {
+      this.account = await this.$getDefaultAccount()      
+
+      this.$web3.eth.getBalance(this.account, (error, result) => {        
+        this.balance = this.$web3.fromWei(result, 'ether')
+      })
+
+      this.ciMyNFT = this.$web3.eth.contract(this.$config.MYNFT_ABI).at(this.$config.MYNFT_CA)
+      this.ciAuctions = this.$web3.eth.contract(this.$config.AUCTIONS_ABI).at(this.$config.AUCTIONS_CA)
       
+      this.getMyAuctions()
     },
 
     methods: {      
@@ -97,11 +112,22 @@ import { mapGetters, mapMutations } from 'vuex'
       },
       
       async getMyAuctions() {
-        
+        this.ciAuctions.getAuctionsOf(this.account, {from: this.account, gas: this.$config.GAS_AMOUNT}, (error, result) => {                  
+          this.auctionIds = result     
+        })
       },
 
       async getAuctionById() {
-        
+        this.ciAuctions.getAuctionById(this.selectedAuction, {from: this.account, gas: this.$config.GAS_AMOUNT}, (error, result) => {        
+          console.log(result)
+          this.auctionInfo.title = result[0]
+          this.auctionInfo.price = this.$web3.fromWei(result[1], 'ether')
+          this.auctionInfo.tokenId = result[3]
+
+          this.ciMyNFT.ownerOf(result[3], {}, (error, owner) => {
+            this.auctionInfo.owner = owner
+          })          
+        })
       },
 
       finalizeAuction() {
@@ -110,7 +136,28 @@ import { mapGetters, mapMutations } from 'vuex'
           return
         }
 
-        
+        this.ciAuctions.finalizeAuction(this.selectedAuction, this.toAddress, {from: this.account, gas: this.$config.GAS_AMOUNT}, (error, result) => {        
+          console.log(result)
+        })
+
+        this.watchFinalized((error, result) => {
+          if(!error) alert("Auction finalized...!")
+        })
+      }
+
+      async watchFinalized(cb) {
+        const currentBlock = await this.getCurrentBlock()
+        const eventWatcher = this.ciAuctions.AuctionFinalized({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
+        eventWatcher.watch(cb)
+      },
+
+      getCurrentBlock() {
+        return new Promise((resolve, reject ) => {
+            this.$web3.eth.getBlockNumber((err, blocknumber) => {
+                if(!err) resolve(blocknumber)
+                reject(err)
+            })
+        })
       }
     }
 
