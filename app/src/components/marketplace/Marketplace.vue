@@ -21,18 +21,44 @@
 
 export default {
   data() {
-    return {      
+    return {
+      ciMyNFT: null,
+      ciAuctions: null,       
       auctions: []
     }
   },
 
   mounted() {
+    this.ciAuctions = this.$web3.eth.contract(this.$config.AUCTIONS_ABI).at(this.$config.AUCTIONS_CA)
+    this.ciMyNFT = this.$web3.eth.contract(this.$config.MYNFT_ABI).at(this.$config.MYNFT_CA)
     this.getAuctions()
   },
 
   methods: {
     async getAuctions() {
-      
+      this.ciAuctions.getCount({}, (error, result) => {        
+        const count = result
+
+        for(let i=0; i<count; i++) {
+
+          this.ciAuctions.getAuctionById(i, {}, (err, result) => {
+
+            this.ciMyNFT.ownerOf(result[3], {}, (error, owner) => {
+
+              this.auctions.push({
+                title: result[0],
+                price: this.$web3.fromWei(result[1], 'ether'),
+                image: 'https://gateway.ipfs.io/ipfs/'+result[2],
+                tokenId: result[3],
+                owner: owner,
+                active: result[6],
+                finalized: result[7]
+              })
+            })            
+            
+          })
+        }
+      })
     }	
   }
 }
