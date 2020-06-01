@@ -31,6 +31,9 @@ export default {
 
   data() {
     return {
+      account: null,            
+      contractInstance: null,
+
       auction: {        
         auctionTitle: '',
         price: null        
@@ -42,6 +45,11 @@ export default {
     
   },
 
+  async mounted() {    
+    this.account = await this.$getDefaultAccount()
+    this.contractInstance = this.$web3.eth.contract(this.$config.AUCTIONS_ABI).at(this.$config.AUCTIONS_CA)
+  },
+
   methods: {
     createAuction() {
       if(!this.tokenid) {
@@ -49,7 +57,28 @@ export default {
         return
       }
 
-      
+      const price = this.$web3.toWei(this.auction.price, 'ether')
+      this.contractInstance.createAuction(this.$config.MYNFT_CA, this.tokenid, this.auction.auctionTitle, this.metadata, price, {from: this.account, gas: this.$config.GAS_AMOUNT}, (error, transactionHash) => {     
+            console.log("txhash",transactionHash)            
+        })
+      this.watchCreated((error, result) => {
+        if(!error) alert("Creation completed...!")
+      })    
+    }
+
+    async watchCreated(cb) {
+      const currentBlock = await this.getCurrentBlock()
+      const eventWatcher = this.contractInstance.AuctionCreated({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
+      eventWatcher.watch(cb)
+    },
+
+    getCurrentBlock() {
+      return new Promise((resolve, reject ) => {
+        this.$web3.eth.getBlockNumber((err, blocknumber) => {
+            if(!err) resolve(blocknumber)
+            reject(err)
+        })
+      })
     }    
   }
 }
