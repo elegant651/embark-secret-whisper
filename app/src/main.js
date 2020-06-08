@@ -14,7 +14,7 @@ Vue.mixin({
   async created() {  	
     // console.log(await ethereum.send('net_version'))
 
-    await ethereum.enable()
+    // await ethereum.enable()
 
     this.$web3 = new Web3(ethereum)
 

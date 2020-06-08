@@ -37,6 +37,16 @@ export default new Router({
       path: '/secret-board',
       name: 'secretBoard',
       component: () => import('./views/SecretBoard.vue')
+    },
+    {
+      path: '/marketplace',
+      name: 'marketplace',
+      component: () => import('./views/Marketplace.vue')
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('./views/Profile.vue')
     }
   ]
 })
