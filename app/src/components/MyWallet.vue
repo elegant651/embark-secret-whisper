@@ -21,8 +21,8 @@
       }      
     },
 
-    async mounted() {                             
-      this.account = await this.$getDefaultAccount()      
+    async mounted() {
+      this.account = await this.$getDefaultAccount()
 
       this.$web3.eth.getBalance(this.account, (error, result) => {        
         this.balance = this.$web3.fromWei(result, 'ether')

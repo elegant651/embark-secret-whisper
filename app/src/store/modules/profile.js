@@ -9,13 +9,13 @@ const state = {
 
 const getters = {
   userData: state => {
-  	return {
-  	  id: state.id,
-  	  nickname: state.nickname,
-  	  profileUrl: state.profileUrl,
-  	  isActive: state.isActive,
+    return {
+      id: state.id,
+      nickname: state.nickname,
+      profileUrl: state.profileUrl,
+      isActive: state.isActive,
       userType: state.userType
-  	}
+    }
   }
 }
 
