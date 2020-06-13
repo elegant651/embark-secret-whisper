@@ -3,30 +3,34 @@
     <v-card class="cardG">
       <div>                 
         <p class="text-center address">
-           {{account}} <span class="reftxt">(Address)</span>
+           {{address}} <span class="reftxt">(Address)</span>
         </p>
         <p class="text-center balance">
            {{balance}} Ether <span class="reftxt">(Balance)</span>
         </p>
       </div>
-    </v-card>                 
+    </v-card>
   </div>
 </template>
 <script>
+  import { mapState } from 'vuex'
   export default {
     data() {
-      return {       
-        account: '',
-        balance: null                
+      return {
       }      
     },
 
-    async mounted() {
-      this.account = await this.$getDefaultAccount()
+    computed: {
+      ...mapState('wallet', [        
+        'isConnected',       
+        'address',
+        'balance'
+      ]),
 
-      this.$web3.eth.getBalance(this.account, (error, result) => {        
-        this.balance = this.$web3.fromWei(result, 'ether')
-      })      
+    },
+
+    async mounted() {
+      
     },  
 
     methods: {

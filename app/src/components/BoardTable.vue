@@ -69,7 +69,7 @@
 </template>
 
 <script>
-  import RichEditor from './RichEditor'
+  import RichEditor from './old/RichEditor'
 
   export default {
     props: {

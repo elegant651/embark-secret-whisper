@@ -5,20 +5,21 @@
       app
       clipped
     >
-      <v-list dense>        
-        <template v-for="item in items"> 
-          <router-link :to="item.route" :key="item.text">
-            <v-list-item>              
-              <v-list-item-content>
-                <v-list-item-title class="menu_title">
-                  {{ item.text }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </router-link>
-        </template>
+      <v-list dense>
+        <template v-if="isConnected">
+          <template v-for="item in itemsOnAuth"> 
+            <router-link :to="item.route" :key="item.text">
+              <v-list-item>              
+                <v-list-item-content>
+                  <v-list-item-title class="menu_title">
+                    {{ item.text }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </router-link>
+          </template>
 
-        <v-divider class="mt-4"></v-divider>
+          <v-divider class="mt-4"></v-divider>
 
           <v-subheader class="mt-4 grey--text text--darken-1">MY PROFILE</v-subheader>
           <router-link to="/profile">
@@ -29,16 +30,31 @@
               <v-list-item-title v-text="nickname" style="text-align: left; color:#acb3be; font-size: 12px;"></v-list-item-title>
             </v-list-item>
           </router-link>
+        </template>
+
+        <template v-else>
+          <template v-for="item in itemsPublic"> 
+            <router-link :to="item.route" :key="item.text">
+              <v-list-item>              
+                <v-list-item-content>
+                  <v-list-item-title class="menu_title">
+                    {{ item.text }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </router-link>
+          </template>
+        </template>
       </v-list>
     </v-navigation-drawer>
 
     <v-app-bar color="#FFF" app clipped-left dense>
       <v-app-bar-nav-icon @click="drawer = !drawer"><img src="/img/ic-menu.png" srcset="/img/ic-menu@2x.png 2x,/img/ic-menu@3x.png 3x"></v-app-bar-nav-icon>
-      <v-toolbar-title>Inssa Network</v-toolbar-title> 
+      <v-toolbar-title>Inssa Chat</v-toolbar-title> 
       <v-spacer></v-spacer>
 
-      <template v-if="isConnectWallet">        
-        <div class="balance">{{balance}}</div>
+      <template v-if="isConnected">        
+        <div class="balance">{{parseFloat(balance).toFixed(4)}} Ether</div>
       </template>
       <template v-else>
         <v-btn outlined @click="goToProfile">Connect to Wallet</v-btn>
@@ -67,17 +83,20 @@
   export default {
     data: () => ({
       drawer: null,
-      items: [
+      itemsPublic: [
+        { text: 'Home', route: '/' },        
+        { text: 'Secret Board', route: '/secret-board' },        
+      ],
+      itemsOnAuth: [
         { text: 'Home', route: '/' },
         { text: 'Chat', route: '/chat'},
         { text: 'Secret Board', route: '/secret-board' },
         { text: 'Marketplace', route: '/marketplace'}
-      ]      
+      ]
     }),
     computed: {
       ...mapState('wallet', [        
-        'isConnected',
-        'isConnectWallet',
+        'isConnected',        
         'address',
         'balance'
       ]),
@@ -99,18 +118,29 @@
     },
     methods: {
       ...mapMutations('wallet', [        
-        'setIsConnected',
-        'setIsConnectWallet',
+        'setIsConnected',        
         'setAddress',
         'setBalance'
       ]),
 
       async connect () {
-        this.setIsConnectWallet(true)
-      },      
+        try {
+          if (window.ethereum) {
+            const accounts = await ethereum.enable()
+            const account = accounts[0]
+            this.setAddress(account)
+            this.setIsConnected(true)
 
-      logout () {
-        this.setIsConnectWallet(false)
+            const balanceWei = await this.$web3.eth.getBalance(account)
+            const balance = this.$web3.utils.fromWei(balanceWei, 'ether')
+            this.setBalance(balance)
+          }          
+        } catch(error) {
+          console.error(error)
+        }
+      },
+
+      logout () {        
         this.setIsConnected(false)
 
         location.reload()

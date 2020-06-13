@@ -3,16 +3,16 @@
   <v-card class="cardContent mx-auto mb-4 pa-2">
     <div class="avatar mb-6">
       <img :src="getProfileImg" />
-      <div class="nickname">{{nickname}}</div>
+      <!-- <div class="nickname">{{nickname}}</div> -->
     </div>
 
     <div class="mx-auto d-flex justify-space-around">
       <div class="countBox">
         <div class="cntTitle">Feed</div>
         <div class="cntVal">{{numFeeds}}</div>
-      </div>  	  
+      </div>
     </div>
-  </v-card>  
+  </v-card>
 </div>
 </template>
 
@@ -26,16 +26,16 @@ export default {
   }),
 
   computed: {
-    ...mapState('profile', [ 
-      'nickname'
+    ...mapState('wallet', [
+      'address'
     ]),
 
     nickname () {
-      return this.nickname
+      return this.address
     },
 
     getProfileImg () {
-      return getIdenticon(this.nickname)
+      return getIdenticon(this.address)
     },
 
     numFeeds () {
