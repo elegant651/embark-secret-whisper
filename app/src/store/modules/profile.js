@@ -1,7 +1,7 @@
 
 const state = {
   id: 'UPRXIXUtFLeFCq7gfWRcT8OXV8k2',
-  nickname: 'cherryboy',
+  nickname: '',
   profileUrl: '',
   isActive: true,
   userType: 1

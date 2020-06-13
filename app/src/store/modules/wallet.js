@@ -1,7 +1,6 @@
 
 const state = {
-  isConnected: false,
-  isConnectWallet: false,
+  isConnected: false,  
   address: '',
   balance: 0
 }
@@ -13,9 +12,6 @@ const getters = {
 const mutations = {
   setIsConnected(state, isConnected) {
     state.isConnected = isConnected
-  },
-  setIsConnectWallet(state, isConnected) {
-    state.isConnectWallet = isConnected
   },  
   setBalance(state, balance) {
     state.balance = balance
