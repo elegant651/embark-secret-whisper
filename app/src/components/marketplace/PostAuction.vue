@@ -25,61 +25,56 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   props: ['tokenid', 'metadata'],
 
   data() {
-    return {
-      account: null,            
+    return {      
       contractInstance: null,
 
-      auction: {        
+      auction: {
         auctionTitle: '',
-        price: null        
+        price: null
       },
     }
   },
 
   computed: {
-    
+    ...mapState('wallet', [      
+      'address',
+    ]),
   },
 
   async mounted() {    
-    this.account = await this.$getDefaultAccount()
-    this.contractInstance = this.$web3.eth.contract(this.$config.AUCTIONS_ABI).at(this.$config.AUCTIONS_CA)
+    this.contractInstance = new this.$web3.eth.Contract(this.$config.AUCTIONS_ABI, this.$config.AUCTIONS_CA)
   },
 
   methods: {
-    createAuction() {
+    async createAuction() {
       if(!this.tokenid) {
         alert("Check for tokenId")
         return
       }
 
       const price = this.$web3.toWei(this.auction.price, 'ether')
-      this.contractInstance.createAuction(this.$config.MYNFT_CA, this.tokenid, this.auction.auctionTitle, this.metadata, price, {from: this.account, gas: this.$config.GAS_AMOUNT}, (error, transactionHash) => {     
-            console.log("txhash",transactionHash)            
-        })
+      await this.contractInstance.methods.createAuction(this.$config.MYNFT_CA, this.tokenid, this.auction.auctionTitle, this.metadata, price)
+        .send({from: this.address, gas: this.$config.GAS_AMOUNT})
+
       this.watchCreated((error, result) => {
         if(!error) alert("Creation completed...!")
       })    
-    }
+    },
 
     async watchCreated(cb) {
       const currentBlock = await this.getCurrentBlock()
-      const eventWatcher = this.contractInstance.AuctionCreated({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
+      const eventWatcher = this.contractInstance.AuctionCreated({fromBlock: currentBlock - 1})
       eventWatcher.watch(cb)
     },
 
-    getCurrentBlock() {
-      return new Promise((resolve, reject ) => {
-        this.$web3.eth.getBlockNumber((err, blocknumber) => {
-            if(!err) resolve(blocknumber)
-            reject(err)
-        })
-      })
-    }    
+    async getCurrentBlock() {
+      return await this.$web3.eth.getBlockNumber()      
+    }
   }
 }
 </script>

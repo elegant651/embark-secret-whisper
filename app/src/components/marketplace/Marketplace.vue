@@ -18,6 +18,7 @@
 </template>
 <script>
 
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -28,38 +29,41 @@ export default {
     }
   },
 
+  computed: {
+    ...mapState('wallet', [
+      'address'
+    ]),
+  },
+
   mounted() {
-    this.ciAuctions = this.$web3.eth.contract(this.$config.AUCTIONS_ABI).at(this.$config.AUCTIONS_CA)
-    this.ciMyNFT = this.$web3.eth.contract(this.$config.MYNFT_ABI).at(this.$config.MYNFT_CA)
+    this.ciAuctions = new this.$web3.eth.Contract(this.$config.AUCTIONS_ABI, this.$config.AUCTIONS_CA)
+    // this.ciAuctions.options.from = this.address
+    this.ciMyNFT = new this.$web3.eth.Contract(this.$config.MYNFT_ABI, this.$config.MYNFT_CA)
+
     this.getAuctions()
   },
 
   methods: {
     async getAuctions() {
-      this.ciAuctions.getCount({}, (error, result) => {        
-        const count = result
+      const count = await this.ciAuctions.methods.getCount().call()
+      
+        console.log('count', count)
 
         for(let i=0; i<count; i++) {
 
-          this.ciAuctions.getAuctionById(i, {}, (err, result) => {
-
-            this.ciMyNFT.ownerOf(result[3], {}, (error, owner) => {
-
-              this.auctions.push({
-                title: result[0],
-                price: this.$web3.fromWei(result[1], 'ether'),
-                image: 'https://gateway.ipfs.io/ipfs/'+result[2],
-                tokenId: result[3],
-                owner: owner,
-                active: result[6],
-                finalized: result[7]
-              })
-            })            
-            
+          const result = await this.ciAuctions.methods.getAuctionById(i).call()
+          const owner = await this.ciMyNFT.methods.ownerOf(result[3]).call()
+          this.auctions.push({
+            title: result[0],
+            price: this.$web3.fromWei(result[1], 'ether'),
+            image: 'https://gateway.ipfs.io/ipfs/'+result[2],
+            tokenId: result[3],
+            owner: owner,
+            active: result[6],
+            finalized: result[7]
           })
         }
-      })
-    }	
+    }
   }
 }
 </script>

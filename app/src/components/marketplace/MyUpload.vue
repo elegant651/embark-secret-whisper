@@ -32,8 +32,8 @@
   </div>	
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import PostAuction from '@/components/PostAuction.vue'
+import { mapState } from 'vuex'
+import PostAuction from '@/components/marketplace/PostAuction.vue'
 
 export default {
   data() {
@@ -50,6 +50,9 @@ export default {
   },
 
   computed: {
+    ...mapState('wallet', [      
+      'address',
+    ]),
 
     uploadedImg(){
       if (this.dataURI) {
@@ -60,9 +63,8 @@ export default {
     },
   },
 
-  mounted() {
-    this.account = await this.$getDefaultAccount()
-    this.contractInstance = this.$web3.eth.contract(this.$config.MYNFT_ABI).at(this.$config.MYNFT_CA)
+  mounted() {    
+    this.contractInstance = new this.$web3.eth.Contract(this.$config.MYNFT_ABI, this.$config.MYNFT_CA)
 
     this.tokenId = this._getRandomInt(123456789,999999999)              
   },
@@ -95,18 +97,16 @@ export default {
       })
     },
 
-    submit() {
+    async submit() {
       if(!this.dataURI){
         alert("Fill in dataURI on the input")
         return
       }
 
-      this.contractInstance.registerUniqueToken(this.account, this.tokenId, this.dataURI, {
-          from: this.account,
+      await this.contractInstance.methods.registerUniqueToken(this.address, this.tokenId, this.dataURI).send({
+          from: this.address,
           gas: this.$config.GAS_AMOUNT
-        }, (error, result) => {
-          console.log("result",result)          
-      })
+        })      
 
       this.watchTokenRegistered((error, result) => {
         if(!error) {
@@ -116,39 +116,32 @@ export default {
       })
     },
 
-    transferToCA() {
-      this.contractInstance.transferFrom(this.account, this.$config.AUCTIONS_CA, this.tokenId, {
-          from: this.account,
+    async transferToCA() {
+      await this.contractInstance.methods.transferFrom(this.address, this.$config.AUCTIONS_CA, this.tokenId).send({
+          from: this.address,
           gas: this.$config.GAS_AMOUNT
-        }, (error, result) => {
-          console.log("result",result)         
-      })
+        })
 
       this.watchTransfered((error, result) => {
         if(!error) alert("Token transfered to CA...!")
       })
-    }
+    },
 
     async watchTokenRegistered(cb) {
       const currentBlock = await this.getCurrentBlock()
-      const eventWatcher = this.contractInstance.TokenRegistered({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
+      const eventWatcher = this.contractInstance.events.TokenRegistered({fromBlock: currentBlock - 1})
       eventWatcher.watch(cb)
     },
 
     async watchTransfered(cb) {
       const currentBlock = await this.getCurrentBlock()
-      const eventWatcher = this.contractInstance.Transfer({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
+      const eventWatcher = this.contractInstance.events.Transfer({fromBlock: currentBlock - 1})
       eventWatcher.watch(cb)
     },
 
-    getCurrentBlock() {
-      return new Promise((resolve, reject ) => {
-        this.$web3.eth.getBlockNumber((err, blocknumber) => {
-            if(!err) resolve(blocknumber)
-            reject(err)
-        })
-      })
-    },   
+    async getCurrentBlock() {
+      return await this.$web3.eth.getBlockNumber()      
+    }
   }
 
 }

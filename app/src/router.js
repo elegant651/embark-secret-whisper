@@ -44,6 +44,11 @@ export default new Router({
       component: () => import('./views/Marketplace.vue')
     },
     {
+      path: '/upload',
+      name: 'upload',
+      component: () => import('./views/Upload.vue')
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: () => import('./views/Profile.vue')
