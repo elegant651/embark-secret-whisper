@@ -1,5 +1,5 @@
 <template>
-  <div>    
+  <div class="pa-3">
     <v-form class="form" ref="form">
       <v-text-field
         v-model="tokenId"
@@ -106,14 +106,14 @@ export default {
       await this.contractInstance.methods.registerUniqueToken(this.address, this.tokenId, this.dataURI).send({
           from: this.address,
           gas: this.$config.GAS_AMOUNT
-        })      
-
-      this.watchTokenRegistered((error, result) => {
-        if(!error) {
+        })        
+        .on('confirmation', (confirmationNumber, receipt) => {
           alert("Token registered...!")
           this.isRegistered = true
-        }
-      })
+        }).on('error', (error, receipt) => {
+          alert(error)
+        });
+      
     },
 
     async transferToCA() {
@@ -121,27 +121,12 @@ export default {
           from: this.address,
           gas: this.$config.GAS_AMOUNT
         })
-
-      this.watchTransfered((error, result) => {
-        if(!error) alert("Token transfered to CA...!")
-      })
-    },
-
-    async watchTokenRegistered(cb) {
-      const currentBlock = await this.getCurrentBlock()
-      const eventWatcher = this.contractInstance.events.TokenRegistered({fromBlock: currentBlock - 1})
-      eventWatcher.watch(cb)
-    },
-
-    async watchTransfered(cb) {
-      const currentBlock = await this.getCurrentBlock()
-      const eventWatcher = this.contractInstance.events.Transfer({fromBlock: currentBlock - 1})
-      eventWatcher.watch(cb)
-    },
-
-    async getCurrentBlock() {
-      return await this.$web3.eth.getBlockNumber()      
-    }
+      .on('confirmation', (confirmationNumber, receipt) => {
+        alert("Token transfered to CA...!")
+      }).on('error', (error, receipt) => {
+        alert(error)
+      });      
+    } 
   }
 
 }
