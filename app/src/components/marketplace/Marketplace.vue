@@ -45,9 +45,7 @@ export default {
 
   methods: {
     async getAuctions() {
-      const count = await this.ciAuctions.methods.getCount().call()
-      
-        console.log('count', count)
+      const count = await this.ciAuctions.methods.getCount().call() 
 
         for(let i=0; i<count; i++) {
 
