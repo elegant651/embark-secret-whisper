@@ -34,6 +34,11 @@ export default new Router({
       component: () => import('./views/Chat.vue')
     },
     {
+      path: '/feed',
+      name: 'feed',
+      component: () => import('./views/Feed.vue')
+    },
+    {
       path: '/secret-board',
       name: 'secretBoard',
       component: () => import('./views/SecretBoard.vue')

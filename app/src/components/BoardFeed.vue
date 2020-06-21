@@ -1,5 +1,6 @@
 <template>
 <div>
+  <h2>Feed</h2>
   <v-card class="cardContent mx-auto mb-4" max-width="400" max-height="400"
     v-for="item in items" :key="item.index">
     <v-list-item>

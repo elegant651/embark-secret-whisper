@@ -84,12 +84,14 @@
     data: () => ({
       drawer: null,
       itemsPublic: [
-        { text: 'Home', route: '/' },        
+        { text: 'Home', route: '/' },
+        { text: 'Feed', route: '/feed' },
         { text: 'Secret Board', route: '/secret-board' },        
       ],
       itemsOnAuth: [
         { text: 'Home', route: '/' },
         { text: 'Chat', route: '/chat'},
+        { text: 'Feed', route: '/feed' },
         { text: 'Secret Board', route: '/secret-board' },
         { text: 'Marketplace', route: '/marketplace'}
       ]
