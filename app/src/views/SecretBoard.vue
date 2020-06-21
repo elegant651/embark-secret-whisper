@@ -30,7 +30,7 @@ export default {
     ])
   },
   async mounted() {
-    await WhisperService.init()    
+    await WhisperService.init()
     await WhisperService.sendPublicMsg({title: "testtete"})
 
     this.onSubscribeForHttp()
