@@ -106,11 +106,12 @@ export default {
       await this.contractInstance.methods.registerUniqueToken(this.address, this.tokenId, this.dataURI).send({
           from: this.address,
           gas: this.$config.GAS_AMOUNT
-        })        
-        .on('confirmation', (confirmationNumber, receipt) => {
-          alert("Token registered...!")
+        })
+        .on('transactionHash', (transactionHash) => { 
+          alert("tx:"+transactionHash)
           this.isRegistered = true
-        }).on('error', (error, receipt) => {
+        })
+        .on('error', (error, receipt) => {
           alert(error)
         });
       
@@ -121,7 +122,8 @@ export default {
           from: this.address,
           gas: this.$config.GAS_AMOUNT
         })
-      .on('confirmation', (confirmationNumber, receipt) => {
+      .on('transactionHash', (transactionHash) => { 
+        alert("tx:"+transactionHash)
         alert("Token transfered to CA...!")
       }).on('error', (error, receipt) => {
         alert(error)

@@ -60,10 +60,11 @@ export default {
       const price = await this.$web3.utils.toWei(this.auction.price, 'ether')      
       await this.contractInstance.methods.createAuction(this.$config.MYNFT_CA, this.tokenid, this.auction.auctionTitle, this.metadata, price)
         .send({from: this.address, gas: this.$config.GAS_AMOUNT})
-      .on('confirmation', (confirmationNumber, receipt) => {
+      .on('transactionHash', (transactionHash) => {
+        alert("tx:"+transactionHash) 
         alert("Creation completed...!")
-        this.isRegistered = true
-      }).on('error', (error, receipt) => {
+      })      
+      .on('error', (error, receipt) => {
         alert(error)
       });
  

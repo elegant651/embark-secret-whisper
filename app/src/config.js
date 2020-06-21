@@ -8,5 +8,5 @@ export default {
 	MYNFT_ABI: MyNFT.abiDefinition,
 	AUCTIONS_ABI: Auctions.abiDefinition,
 
-	GAS_AMOUNT: 500000
+	GAS_AMOUNT: 5000000
 }

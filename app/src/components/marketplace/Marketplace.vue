@@ -55,7 +55,7 @@ export default {
           const owner = await this.ciMyNFT.methods.ownerOf(result[3]).call()
           this.auctions.push({
             title: result[0],
-            price: this.$web3.fromWei(result[1], 'ether'),
+            price: this.$web3.utils.fromWei(result[1], 'ether'),
             image: 'https://gateway.ipfs.io/ipfs/'+result[2],
             tokenId: result[3],
             owner: owner,
