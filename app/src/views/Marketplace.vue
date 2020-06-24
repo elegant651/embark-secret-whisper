@@ -2,15 +2,15 @@
   <div>
     <h2>Marketplace</h2>
     <v-btn outlined @click="goToUpload">Upload Item</v-btn>
-    <Marketplace />
+    <MarketplaceFeed />
   </div>
 </template>
 <script>
-  import Marketplace from '@/components/marketplace/Marketplace.vue'
+  import MarketplaceFeed from '@/components/marketplace/MarketplaceFeed.vue'
 
   export default {
     components: { 
-      Marketplace
+      MarketplaceFeed
     },
 
     methods: {

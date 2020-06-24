@@ -1,0 +1,137 @@
+<template>
+<div>  
+  <v-card class="cardContent mx-auto mb-4" max-width="400" max-height="400"
+    v-for="(auction, index) in auctions" :key="index">
+    <v-list-item>
+      <v-list-item-avatar color="grey"><img :src="getProfile(auction.owner)" /></v-list-item-avatar>
+      <v-list-item-content>
+        <v-list-item-title>{{auction.title}}</v-list-item-title>
+        <v-list-item-subtitle>{{auction.price}} Ether</v-list-item-subtitle>
+      </v-list-item-content>
+      <div class="flex-grow-1"></div>      
+      <img v-if="auction.active" src="/img/heart-on.png" />
+      <img v-else src="/img/heart-off.png" />
+    </v-list-item>
+
+    <v-img :src="auction.image" height="194"></v-img>
+
+    <!-- <p class="ma-4">{{item.content}}</p> -->
+
+    <v-card-actions>
+      <v-btn
+        text
+        color="deep-purple accent-4"
+      >
+        Buy
+      </v-btn>
+      <v-btn
+        text
+        color="deep-purple accent-4"
+      >
+        Chat
+      </v-btn>       
+    </v-card-actions>
+  </v-card>
+</div>  
+</template>
+
+<script>
+import { mapState } from 'vuex'
+
+import {getIdenticon} from '@/util/identicon'
+
+export default {
+  props: {
+    items: {
+      type: Array,
+      required: true
+    }
+  },
+  components: {
+    
+  },
+  data() {
+    return {
+      ciMyNFT: null,
+      ciAuctions: null,
+      auctions: []
+    }    
+  },
+
+  computed: {
+    ...mapState('wallet', [
+      'address'
+    ]),
+  },
+
+  mounted() {
+    this.ciAuctions = new this.$web3.eth.Contract(this.$config.AUCTIONS_ABI, this.$config.AUCTIONS_CA)
+    // this.ciAuctions.options.from = this.address
+    this.ciMyNFT = new this.$web3.eth.Contract(this.$config.MYNFT_ABI, this.$config.MYNFT_CA)
+
+    this.getAuctions()
+  },
+
+  methods: {
+    async getAuctions() {
+      const count = await this.ciAuctions.methods.getCount().call() 
+
+        for(let i=0; i<count; i++) {
+
+          const result = await this.ciAuctions.methods.getAuctionById(i).call()
+          const owner = await this.ciMyNFT.methods.ownerOf(result[3]).call()
+          this.auctions.push({
+            title: result[0],
+            price: this.$web3.utils.fromWei(result[1], 'ether'),
+            image: 'https://gateway.ipfs.io/ipfs/'+result[2],
+            tokenId: result[3],
+            owner: owner,
+            active: result[6],
+            finalized: result[7]
+          })
+        }
+    },
+
+    getProfile (user_name) {
+      return getIdenticon(user_name)      
+    },
+    getImage (url) {
+      if(url) {
+        return url
+      } else {
+        return ''
+      }     
+    },
+    getCreatedAt (createdAt) {      
+      return tformat(new Date(createdAt*1000))
+    }
+  }
+  
+}
+</script>
+
+<style scoped>
+.cardContent {
+  text-align: left;
+}
+
+.v-list-item__title {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #17191d;
+}
+
+.v-list-item__subtitle {
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #7f899a;
+}
+</style>
