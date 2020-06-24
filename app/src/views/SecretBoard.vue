@@ -9,7 +9,7 @@
 import * as WhisperService from '@/services/WhisperService'
 import { mapActions, mapMutations, mapGetters } from 'vuex'
 
-import BoardTable from '@/components/BoardTable'
+import BoardTable from '@/components/board/BoardTable'
 
 export default {
   components: {

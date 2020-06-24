@@ -7,7 +7,7 @@
 <script>
 import { mapActions, mapMutations, mapGetters } from 'vuex'
 
-import BoardFeed from '@/components/BoardFeed.vue'
+import BoardFeed from '@/components/board/BoardFeed.vue'
 
 export default {  
   components: {
