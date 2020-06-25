@@ -10,7 +10,7 @@
         type="file"
         @change="captureFile" />
 
-      <v-btn @click="uploadImg" outlined color="teal">UploadImg</v-btn>   
+      <v-btn @click="uploadImg" outlined color="teal">Upload Image</v-btn>   
       <img :src="uploadedImg" width="300" />
 
       <v-text-field

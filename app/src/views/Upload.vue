@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Upload Page</h2>
+    <h2>New Todo</h2>
     <MyUpload />    
   </div>	
 </template>
