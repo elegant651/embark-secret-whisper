@@ -1,16 +1,16 @@
 <template>
   <div>
-    <h2>Marketplace</h2>
-    <v-btn outlined @click="goToUpload">Upload Item</v-btn>
-    <MarketplaceFeed />
+    <h2>Todo List</h2>
+    <!-- <v-btn outlined @click="goToUpload">New Todo</v-btn> -->
+    <TodoFeed />
   </div>
 </template>
 <script>
-  import MarketplaceFeed from '@/components/marketplace/MarketplaceFeed.vue'
+  import TodoFeed from '@/components/battles/TodoFeed.vue'
 
   export default {
     components: { 
-      MarketplaceFeed
+      TodoFeed
     },
 
     methods: {

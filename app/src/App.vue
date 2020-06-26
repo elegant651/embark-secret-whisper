@@ -94,7 +94,7 @@
         { text: 'Create Todo', route: '/create-todo'},
         // { text: 'Feed', route: '/feed' },
         // { text: 'Secret Board', route: '/secret-board' },
-        { text: 'Marketplace', route: '/marketplace'}
+        { text: 'Todo Feed', route: '/marketplace'}
       ]
     }),
     computed: {
