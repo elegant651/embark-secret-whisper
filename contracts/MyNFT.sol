@@ -7,6 +7,7 @@ contract MyNFT is ERC721Token {
         ERC721Token(_name, _symbol) {}
 
     function registerUniqueToken(
+        address _repoCA,
         address _to,
         uint256 _tokenId,
         string  _tokenURI
@@ -14,6 +15,8 @@ contract MyNFT is ERC721Token {
     {
         super._mint(_to, _tokenId);
         super._setTokenURI(_tokenId, _tokenURI);
+        super.transferFrom(_to, _repoCA, _tokenId);
+
         emit TokenRegistered(_to, _tokenId);
     }
 
