@@ -23,17 +23,20 @@
               type="file"
               @change="captureFile" />
 
-            <v-btn @click="uploadImg" outlined color="teal">Upload Image</v-btn>   
-            <img :src="uploadedImg" width="300" />
+            <!-- <v-btn @click="uploadImg" outlined color="teal">Upload Image</v-btn>    -->
+            <!-- <img :src="uploadedImg" width="300" /> -->
 
-            <v-text-field
+            <!-- <v-text-field
               v-model="dataURI"   
               label="Data URI"
               disabled
               required
-              ></v-text-field>
+              ></v-text-field> -->
 
-            <v-btn @click="submit" outlined color="teal">Submit</v-btn>      
+            <div class="ma-3">  
+              <v-btn v-if="!isLoading" @click="uploadImg" outlined color="teal">Submit</v-btn>      
+              <v-progress-circular v-else indeterminate></v-progress-circular>
+            </div>
 
             <!-- <div v-show="isRegistered">
               <v-divider />
@@ -48,21 +51,22 @@
         <div>
           <v-form class="form" ref="form">
               <v-text-field
-                  v-model="auction.auctionTitle"
-                  placeholder="e.g. My NFT"
-                  label="Auction title"
+                  v-model="todo.todoTitle"
+                  placeholder="e.g. Brush my teeth"
+                  label="Todo title"
                   persistent-hint
                   ></v-text-field>
 
               <v-text-field
-                  v-model="auction.price"
-                  placeholder="e.g. 1"
+                  v-model="todo.price"
+                  placeholder="e.g. 0.1"
                   label="Price"
                   type="number"
                   persistent-hint
                   ></v-text-field>
 
-              <v-btn @click="createAuction" outlined color="teal">Create Auction</v-btn>
+              <v-btn v-if="!isLoading" @click="createTodo" outlined color="teal">Create Todo</v-btn>
+              <v-progress-circular v-else indeterminate></v-progress-circular>
           </v-form>
         </div>
         </v-stepper-content>
@@ -72,7 +76,6 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import PostAuction from '@/components/marketplace/PostAuction.vue'
 
 export default {
   data() {
@@ -83,18 +86,18 @@ export default {
       e1: 1,
       file: null,
       tokenId: null,
+      isLoading: false,
       // isRegistered: false,
       dataURI: null,
 
-      auction: {
-        auctionTitle: '',
+      todo: {
+        todoTitle: '',
         price: null
       },
     }
   }, 
 
-  components: {
-    PostAuction
+  components: {    
   },
 
   computed: {
@@ -113,7 +116,7 @@ export default {
 
   mounted() {    
     this.caNFT = new this.$web3.eth.Contract(this.$config.MYNFT_ABI, this.$config.MYNFT_CA)
-    this.caAuction = new this.$web3.eth.Contract(this.$config.AUCTIONS_ABI, this.$config.AUCTIONS_C)
+    this.caAuction = new this.$web3.eth.Contract(this.$config.AUCTIONS_ABI, this.$config.AUCTIONS_CA)
 
     this.tokenId = this._getRandomInt(123456789,999999999)              
   },
@@ -133,6 +136,8 @@ export default {
         return
       }
       
+      this.isLoading = true
+
       const formData = new FormData()
       formData.append('file', this.file)
       this.axios({
@@ -143,25 +148,29 @@ export default {
         headers: {'Content-Type': 'multipart/form-data'}
       }).then((response)=> {
         this.dataURI = response.data.Hash
+
+        this.submit()
+      }).catch(error => {
+        alert(error)
+        this.isLoading = false
       })
     },
 
     async submit() {
-      if(!this.dataURI){
-        alert("Fill in dataURI on the input")
-        return
-      }
-
       await this.caNFT.methods.registerUniqueToken(this.$config.AUCTIONS_CA, this.address, this.tokenId, this.dataURI).send({
           from: this.address,
           gas: this.$config.GAS_AMOUNT
         })
         .on('transactionHash', (transactionHash) => { 
           alert("tx:"+transactionHash)
+          this.isLoading = false
+
+          this.e1 = 2
           // this.isRegistered = true
         })
         .on('error', (error, receipt) => {
           alert(error)
+          this.isLoading = false
         });
       
     },
@@ -179,20 +188,24 @@ export default {
     //   });      
     // },
 
-    async createAuction() {
+    async createTodo() {
       if(!this.tokenId) {
         alert("Check for tokenId")
         return
       }
 
-      const price = await this.$web3.utils.toWei(this.auction.price, 'ether')      
-      await this.caAuction.methods.createAuction(this.$config.MYNFT_CA, this.tokenId, this.auction.auctionTitle, this.metadata, price)
+      this.isLoading = true
+
+      const price = await this.$web3.utils.toWei(this.todo.price, 'ether')      
+      await this.caAuction.methods.createAuction(this.$config.MYNFT_CA, this.tokenId, this.todo.todoTitle, this.dataURI, price)
         .send({from: this.address, gas: this.$config.GAS_AMOUNT})
       .on('transactionHash', (transactionHash) => {
-        alert("tx:"+transactionHash) 
-        alert("Creation completed...!")
+        this.isLoading = false        
+        alert("Creation completed...! tx:"+transactionHash)
+        this.$router.push('/marketplace')
       })      
       .on('error', (error, receipt) => {
+        this.isLoading = false
         alert(error)
       });
  

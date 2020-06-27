@@ -40,13 +40,7 @@ import { mapState } from 'vuex'
 
 import {getIdenticon} from '@/util/identicon'
 
-export default {
-  props: {
-    items: {
-      type: Array,
-      required: true
-    }
-  },
+export default {  
   components: {
     
   },
