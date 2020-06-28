@@ -50,7 +50,7 @@
 
     <v-app-bar color="#FFF" app clipped-left dense>
       <v-app-bar-nav-icon @click="drawer = !drawer"><img src="/img/ic-menu.png" srcset="/img/ic-menu@2x.png 2x,/img/ic-menu@3x.png 3x"></v-app-bar-nav-icon>
-      <v-toolbar-title>Inssa Chat</v-toolbar-title> 
+      <v-toolbar-title><div class="logo"><router-link class="btnMenu" to="/"><img src="/img/b-logo.png"></router-link></div></v-toolbar-title> 
       <v-spacer></v-spacer>
 
       <template v-if="isConnected">        
@@ -69,7 +69,7 @@
     <v-footer id="footerWrap" height="auto" color="#0f194a">
       <v-layout justify-center row wrap>
         <v-flex py-2 text-xs-center xs12>
-          &copy;2020 — <strong>Inssa Chat</strong>
+          &copy;2020 — <strong>Battle To-do</strong>
         </v-flex>
       </v-layout>
     </v-footer>
