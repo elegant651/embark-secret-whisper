@@ -29,7 +29,7 @@ export default new Router({
     //   component: () => import('./views/EmployeeView.vue')
     // },
     {
-      path: '/chat',
+      path: '/chat/:channel',
       name: 'chat',
       component: () => import('./views/Chat.vue')
     },

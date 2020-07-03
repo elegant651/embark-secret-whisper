@@ -21,14 +21,16 @@
       <v-btn
         text
         color="deep-purple accent-4"
+        @click="getOwner"
       >
-        Buy
+        Get Owner
       </v-btn>
       <v-btn
         text
         color="deep-purple accent-4"
+        @click="joinChat(index)"
       >
-        Chat
+        Join Chat
       </v-btn>       
     </v-card-actions>
   </v-card>
@@ -96,8 +98,19 @@ export default {
         return ''
       }     
     },
-    getCreatedAt (createdAt) {      
-      return tformat(new Date(createdAt*1000))
+    // getCreatedAt (createdAt) {      
+    //   return tformat(new Date(createdAt*1000))
+    // },
+
+    async getOwner() {
+      // if someone who try to buy things with above price, it should transfer ownership to them.
+
+    },
+
+    joinChat(index) {
+      // join channel in chat room
+      const channelId = 'channel'+index
+      this.$router.push(`/chat/${channelId}`)
     }
   }
   

@@ -21,7 +21,7 @@ const PROVIDER_TESTNET_URI = `wss://ropsten.infura.io/ws/v3/${process.env.VUE_AP
 const web3 = new Web3()
 const shh = web3.shh;
 
-export async function init() {
+export async function init(channel = DEFAULT_CHANNEL) {
   try {
     // web3.setProvider(new Web3.providers.WebsocketProvider(PROVIDER_PRIVNET_URI, {headers: {Origin: "mychat"}}));
     web3.setProvider(new Web3.providers.HttpProvider(PROVIDER_PRIVNET_HTTP_URI));
@@ -37,7 +37,7 @@ export async function init() {
   pubKey = await shh.getPublicKey(keyPair);
 
   // TODO: Generate a symmetric key
-  channelSymKey = await shh.generateSymKeyFromPassword(DEFAULT_CHANNEL);  
+  channelSymKey = await shh.generateSymKeyFromPassword(channel);
 }
 
 export async function sendPublicMsg(msg) {  

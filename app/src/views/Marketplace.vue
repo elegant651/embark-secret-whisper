@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Todo List</h2>
+    <h2 class="ma-3">Todo List</h2>
     <!-- <v-btn outlined @click="goToUpload">New Todo</v-btn> -->
     <TodoFeed />
   </div>

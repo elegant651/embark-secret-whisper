@@ -66,8 +66,9 @@ export default {
     //   this.$router.push('/')
     //   return
     // }
+    const channel = this.$route.params.channel
 
-    await WhisperService.init()    
+    await WhisperService.init(channel)
 
     this.onSubscribeForHttp()    
   },
