@@ -70,7 +70,7 @@ export default {
 
     await WhisperService.init(channel)
 
-    this.onSubscribeForHttp()    
+    this.onSubscribeForHttp()
   },
   computed: {
     ...mapGetters('profile', [

@@ -12,7 +12,7 @@ const POW_TARGET = 2;
 let keyPair, pubKey, channelSymKey = null
 let channelTopic = DEFAULT_TOPIC
 
-const PROVIDER_PRIVNET_URI = `ws://${process.env.VUE_APP_WHISPER_HOST}:8546`
+const PROVIDER_PRIVNET_URI = `ws://${process.env.VUE_APP_WHISPER_HOST_LOCAL}:8546`
 const PROVIDER_PRIVNET_HTTP_URI = `http://${process.env.VUE_APP_WHISPER_HOST}:8545`
 const PROVIDER_TESTNET_URI = `wss://ropsten.infura.io/ws/v3/${process.env.VUE_APP_INFURA_KEY}`
 
