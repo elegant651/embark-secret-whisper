@@ -18,13 +18,13 @@
     <!-- <p class="ma-4">{{item.content}}</p> -->
 
     <v-card-actions>
-      <v-btn
+      <!-- <v-btn
         text
         color="deep-purple accent-4"
         @click="getOwner"
       >
         Get Owner
-      </v-btn>
+      </v-btn> -->
       <v-btn
         text
         color="deep-purple accent-4"
@@ -104,7 +104,7 @@ export default {
 
     async getOwner() {
       // if someone who try to buy things with above price, it should transfer ownership to them.
-
+      
     },
 
     joinChat(index) {
