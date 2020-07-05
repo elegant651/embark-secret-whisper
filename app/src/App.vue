@@ -129,8 +129,10 @@
       async connect () {
         try {
           if (window.ethereum) {
-            const accounts = await ethereum.enable()
-            const account = accounts[0]
+            // const accounts = await ethereum.enable()
+            const accounts = await ethereum.send('eth_requestAccounts'); 
+
+            const account = accounts.result[0]
             this.setAddress(account)
             this.setIsConnected(true)
 
