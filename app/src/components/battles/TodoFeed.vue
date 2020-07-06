@@ -169,7 +169,7 @@ export default {
       const from = this.address   
 
       this.$web3.currentProvider.sendAsync({
-        method: 'eth_signTypedData',
+        method: 'keycard_signTypedData',
         params: [msgParams, from],
         from: from,
       }, function (err, result) {
