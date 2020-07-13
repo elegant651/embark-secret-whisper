@@ -135,6 +135,41 @@ module.exports = {
     }    
   },
 
+  mainnet: {
+    deployment: {
+      accounts: [
+        {
+          "mnemonic": secrets.mnemonic
+        }
+      ],
+      host: "mainnet.infura.io/v3/"+secrets.infuraApiKey,
+      port: false,
+      protocol: "https",
+      type: "rpc",
+      gas: "auto",
+
+      contracts: {
+        // OpenZeppelin contracts
+        "AddressUtils": { "deploy": false },
+        "SafeMath": { "deploy": false },
+        "ERC721Token": { "deploy": false },
+        "ERC721BasicToken": { "deploy": false },
+        "ERC721Holder": { "deploy": false },
+        "Ownable": { "deploy": false },
+        //
+        Auctions: {
+          args: ['$MyNFT']
+        },
+        MyNFT: {
+          args: ["InssaToken", "INSSA"]
+        },
+        ERC721Token: {
+          args: ["InssaToken", "INSSA"]
+        }
+      }
+    }    
+  },
+
   // merges with the settings in default
   // used with "embark run livenet"
   livenet: {

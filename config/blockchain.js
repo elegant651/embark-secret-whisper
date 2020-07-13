@@ -132,6 +132,15 @@ module.exports = {
     ]
   },
 
+  mainnet: {
+    endpoint: 'https://mainnet.infura.io/v3/'+ secrets.infuraApiKey,
+    accounts: [
+      {
+        "mnemonic": secrets.mnemonic
+      }
+    ]
+  },
+
   // merges with the settings in default
   // used with "embark run livenet" and/or "embark blockchain livenet"
   livenet: {
