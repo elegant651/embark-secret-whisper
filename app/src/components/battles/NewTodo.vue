@@ -126,7 +126,7 @@ export default {
     _getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min
     },
-    
+
     async captureFile(event) {
       const MAX_IMAGE_SIZE = 30000 // 30KB
 
@@ -134,10 +134,10 @@ export default {
       const file = event.target.files[0]
 
       if (file.size > MAX_IMAGE_SIZE) {
-        this.imgFile = await this.compressImage(file)
+        this.file = await this.compressImage(file)
       } else {
-        this.imgFile = file
-      }      
+        this.file = file
+      }
     },
 
     async compressImage (imageFile) {
