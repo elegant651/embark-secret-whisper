@@ -76,6 +76,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import imageCompression from '@/util/imageCompression'
 
 export default {
   data() {
@@ -125,9 +126,29 @@ export default {
     _getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min
     },
-    captureFile(event) {
+    
+    async captureFile(event) {
+      const MAX_IMAGE_SIZE = 30000 // 30KB
+
       event.stopPropagation()
-      this.file = event.target.files[0]
+      const file = event.target.files[0]
+
+      if (file.size > MAX_IMAGE_SIZE) {
+        this.imgFile = await this.compressImage(file)
+      } else {
+        this.imgFile = file
+      }      
+    },
+
+    async compressImage (imageFile) {
+      try {        
+        const MAX_IMAGE_SIZE_MB = 0.03 // 30KB
+        const compressedFile = await imageCompression(imageFile, MAX_IMAGE_SIZE_MB)
+        return compressedFile
+      } catch (error) {
+        console.error('* Fail to compress image')
+        return imageFile
+      }
     },
 
     uploadImg() {
