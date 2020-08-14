@@ -3,15 +3,24 @@
     <div class="container">
       <img src="/img/b-logo@3x.png" />
       <h2 class="ma-3">Make a good habit by what you can do battle.</h2>
-      <div class="btnStart" @click="moveCreateTodo">Start Battle to-do!</div>
+      <template v-if="isConnected">
+        <div class="btnStart" @click="moveCreateTodo">Start Battle to-do!</div>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'home',
   components: {
+  },
+  computed: {
+    ...mapState('wallet', [        
+      'isConnected'      
+    ]),
   },
   methods: {
     moveCreateTodo() {
