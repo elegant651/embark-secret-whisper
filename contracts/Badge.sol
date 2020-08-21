@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.25;
+pragma solidity >=0.4.24;
 
 import "./ERC721/ERC721.sol";
 import "./ERC721/ERC721Enumerable.sol";

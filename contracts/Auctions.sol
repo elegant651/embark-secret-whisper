@@ -1,4 +1,5 @@
-pragma solidity ^0.4.23;
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.4.24;
 
 import "./MyNFT.sol";
 
@@ -15,11 +16,7 @@ contract Auctions {
 	  address owner; 
 	  bool active;
 	  bool finalized;
-	}
-
-	function() public {
-	  revert();
-	}
+	}	
 
 	modifier contractIsNFTOwner(address _repoAddress, uint256 _tokenId) {
 	  address nftOwner = MyNFT(_repoAddress).ownerOf(_tokenId);
@@ -62,20 +59,20 @@ contract Auctions {
 		return true;
 	}
 
-    function getCount() public constant returns(uint) {
+    function getCount() public returns(uint) {
 		return auctions.length;
 	}
 
-	function getAuctionsOf(address _owner) public constant returns(uint[]) {
+	function getAuctionsOf(address _owner) public returns(uint[]) {
 		uint[] memory ownedAuctions = auctionOwner[_owner];
 		return ownedAuctions;
 	}
 
-	function getAuctionsCountOfOwner(address _owner) public constant returns(uint) {
+	function getAuctionsCountOfOwner(address _owner) public returns(uint) {
 		return auctionOwner[_owner].length;
 	}
 
-	function getAuctionById(uint _auctionId) public constant returns(
+	function getAuctionById(uint _auctionId) public returns(
 		string name,
 		uint256 price,
 		string metadata,

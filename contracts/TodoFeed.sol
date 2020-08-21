@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.25;
+pragma solidity >=0.4.24;
 contract TodoFeed {
   
   event TodoCompleted (uint256 indexed todoId, address owner, string title, bytes photo, uint256 timestamp);
