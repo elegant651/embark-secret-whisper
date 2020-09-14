@@ -16,6 +16,26 @@
               solo
               required
             ></v-text-field>
+
+            <v-text-field
+              v-model="rule"      
+              label="Rule"
+              :rules="ruleRules"
+              solo
+              required
+            ></v-text-field>
+
+            <div class="mx-auto d-flex justify-space-around">
+              <div class="timeBox pa-2">
+                <div class="tbTitle ma-1">Start Time</div>
+                <!-- <div class="timestamp">12:00 AM, {{item.starttime}}</div> -->
+              </div>
+              <div class="timeBox">
+                <div class="tbTitle ma-1">End Time</div>
+                <!-- <div class="timestamp">12:00 AM, {{item.endtime}}</div> -->
+              </div>
+            </div>
+
             <input type="file" accept="image/*" v-on:change="this.handleImportFile" required />
 
             <v-btn v-if="!isLoading" outlined @click="validate">POST</v-btn>
@@ -39,6 +59,10 @@ export default {
       v => !!v || 'Title is required',
       v => (v && v.length <= 255) || 'Title must be less than 255 characters',
     ],
+    ruleRules: [
+      v => !!v || 'Rule is required',
+      v => (v && v.length <= 255) || 'Rule must be less than 255 characters',
+    ],
     isLoading: false
   }),
 
@@ -51,7 +75,7 @@ export default {
   methods: {
     validate () {
       if (!this.$refs.form.validate()) {
-      	const snackbarMsg = 'form data are incorrect. please check again'        
+        const snackbarMsg = 'form data are incorrect. please check again'        
         this.$emit('error-validate', snackbarMsg)
         return false
       }
