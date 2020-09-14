@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import MyProfile from '@/components/MyProfile'
-import MyWallet from '@/components/MyWallet'
+import MyProfile from '@/components/my/MyProfile'
+import MyWallet from '@/components/my/MyWallet'
 
 export default {  
   components: {
