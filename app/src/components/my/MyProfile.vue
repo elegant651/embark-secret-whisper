@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import {getIdenticon} from '@/util/identicon'
 
 export default {  
