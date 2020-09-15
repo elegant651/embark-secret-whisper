@@ -1,7 +1,7 @@
 <template>
 <div>
   <v-card class="cardContent mx-auto pa-3 mb-4" max-width="400">
-    <v-list-item @click="showDetailDlog">
+    <v-list-item>
       <div class="detail">
         <div class="timestamp">
           {{current_date}}
@@ -9,32 +9,21 @@
         <div class="todo">
           {{todoTitle}}
         </div>
-        <div class="status">
-          {{num_upload_today}} / 1
+        <div class="rule">
+          {{item.rule}}
         </div>
-      </div>
-      <div class="flex-grow-1"></div>
-      <div class="ml-3">
-        
-        <img :src="getImage(user_name)" width="45" height="45" />
-        
-        <div class="username mt-1">{{user_name}}</div>
-      </div>
+      </div>       
     </v-list-item>    
 
-    <template v-if="!isView">
-      <v-card-actions>
-        <template v-if="isMine">
-          <v-btn class="btnAction" color="#0062ff" rounded outlined @click="showPhotoDlog"><img src="/img/ic-card-camera.png" class="mr-2" />Take a photo</v-btn>  
+    
+      <v-card-actions>        
+        <v-btn class="btnAction" color="#0062ff" rounded outlined @click="showPhotoDlog"><img src="/img/ic-card-camera.png" class="mr-2" />Take a photo</v-btn>
+        <template v-if="isVerified">
+          <div class="ml-2" style='color:#0062ff'>Verified</div>
         </template>
         <template v-else>
-          <template v-if="isVerified">
-            <div class="ml-2" style='color:#0062ff'>Verified</div>
-          </template>
-          <template v-else>
-            <v-btn class="btnAction" color="#0062ff" rounded outlined @click="actionConfirm"><img src="/img/ic-card-check.png" class="mr-2"/>Confirmed</v-btn>
-          </template>
-        </template>
+          <div class="ml-2" style='color:#0062ff'>Not Verified</div>
+        </template>        
       </v-card-actions>
 
       <div class="cardContent mx-auto pa-3 mb-2"> 
@@ -59,8 +48,7 @@
           </template>
           </v-row>
         </v-container>
-      </div>  
-    </template>
+      </div>    
       
   </v-card>
 </div>  
@@ -68,21 +56,10 @@
 
 <script>
 import moment from 'moment'
-import firebase from "firebase"
-import "firebase/firestore";
-import "firebase/storage";
 import {getIdenticon} from '@/util/identicon'
 
 export default {
-  props: {
-    isMine: {
-      type: Boolean,
-      default: false
-    },
-    isView: {
-      type: Boolean,
-      default: false
-    },
+  props: {    
     item: {
       type: Object
     }    
@@ -94,24 +71,10 @@ export default {
       } else {
         return ""
       }
-    },
-    user_name () {
-      return this.item.user_name
-    },
+    },    
     current_date () {       
       return moment().format("dddd, MMMM Do YYYY")
-    },
-    curDayIdx () {
-      return parseInt(moment().format("d"))
-    },
-
-    num_upload_today () {
-      if(this.isUploadToday) {
-        return 1
-      } else {
-        return 0
-      }      
-    }
+    }    
   },
   watch: {
     item: function (newItem) {
@@ -154,11 +117,7 @@ export default {
 
     showPhotoDlog () {
       this.$emit('show-photo-dlog', this.item)
-    },
-
-    showDetailDlog () {
-      this.$emit('show-detail-dlog', this.item)
-    },
+    },    
 
     actionConfirm () { 
       this.$emit('action-confirm', this.item)
