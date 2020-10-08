@@ -3,7 +3,7 @@
   <v-card v-for="item in items" :key="item.index" class="cardContent d-flex align-center justify-space-between pl-2 pr-2 mb-4" @click="showDetail(item)">
     <img src="/img/ic-create-plus.png" />
     <div class="txtTodo ml-4">{{item.title}}</div>
-    <div class="txtNumPeople mr-4">{{item.num_participants}} people</div>
+    <div class="txtRule mr-4">{{item.rule}}</div>
   </v-card>
 </div>
 </template>
@@ -46,7 +46,7 @@ export default {
   color: #17191d;
 }
 
-.txtNumPeople {
+.txtRule {
   font-size: 14px;
   font-weight: normal;
   font-stretch: normal;
