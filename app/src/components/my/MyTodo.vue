@@ -1,20 +1,13 @@
 <template>
 <div>
-  <v-card class="cardContent mx-auto pa-3 mb-4" max-width="400">
+  <v-card v-for="item in items" :key="item.index" class="cardContent mx-auto pa-3 mb-4" max-width="400">
     <v-list-item>
       <div class="detail">
-        <div class="timestamp">
-          {{current_date}}
-        </div>
-        <div class="todo">
-          {{todoTitle}}
-        </div>
-        <div class="rule">
-          {{item.rule}}
-        </div>
-      </div>       
+        <img src="/img/ic-create-plus.png" />
+        <div class="todo ml-4">{{item.title}}</div>
+        <div class="txtRule mr-4">{{item.rule}}</div>
+      </div>
     </v-list-item>    
-
     
       <v-card-actions>        
         <v-btn class="btnAction" color="#0062ff" rounded outlined @click="showPhotoDlog"><img src="/img/ic-card-camera.png" class="mr-2" />Take a photo</v-btn>
@@ -55,33 +48,16 @@
 </template>
 
 <script>
-import moment from 'moment'
 import {getIdenticon} from '@/util/identicon'
 
 export default {
   props: {    
-    item: {
-      type: Object
-    }    
-  },
-  computed: {
-    todoTitle () {
-      if(this.item.todo_object){
-        return this.item.todo_object.title  
-      } else {
-        return ""
-      }
-    },    
-    current_date () {       
-      return moment().format("dddd, MMMM Do YYYY")
-    }    
-  },
-  watch: {
-    item: function (newItem) {
-      if(newItem) {
-        this.getCollectionInfo(newItem.collection_id)
-      }      
+    items: {
+      type: Array,
+      required: true
     }
+  },
+  computed: {    
   },
   components: {
     
@@ -90,14 +66,13 @@ export default {
     return {
       arrayWeekday: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
       isVerified: false,
-      photo_urls: [],
-      isUploadToday: false
+      photo_urls: [],      
     }    
   },
   mounted() {    
   },
   methods: {
-    async getCollectionInfo (collection_id) { 
+    async getCollectionInfo () { 
       
     },
 
@@ -105,7 +80,7 @@ export default {
       return getIdenticon(user_name)
     },
 
-    async getVerifyPhoto (idx) {
+    async getVerifyPhoto () {
       return '/img/profile-large.png'      
     },
 

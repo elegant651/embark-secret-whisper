@@ -1,47 +1,51 @@
 <template>
   <v-container fluid>
-    <ListTodo :items="items" v-on:show-detail="onShowDetail" />
+    <MyTodo :items="items" v-on:show-photo-dlog="onShowPhotoDlog" />
 
-    <v-dialog v-model="dialog" persistent min-width="200" max-width="650">
+    <v-dialog v-model="dlogFile" persistent max-width="350">
       <v-card>
-        <v-card-actions>          
+        <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
             class="btnClose"
               color="#000"
               text
-              @click="dialog = false">
+              @click="dlogFile = false">
             X
           </v-btn>
         </v-card-actions>
-        <DetailTodo :item="selItem" v-on:add-todo="onAddTodo" />        
+        <input type="file" accept="image/*" v-on:change="this.handleImportFile" required />
+        <v-btn v-if="!isLoading" outlined class="btnUpload ma-4" @click="this.fileUpload">UPLOAD</v-btn>
+        <v-progress-circular v-else indeterminate color="primary"></v-progress-circular>
       </v-card>
     </v-dialog>
+
   </v-container>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'  
+// import { mapState, mapMutations } from 'vuex'  
 
-import ListTodo from '@/components/battles/ListTodo'
-import DetailTodo from '@/components/battles/DetailTodo'
+import MyTodo from '@/components/my/MyTodo'
+import imageCompression from '@/util/imageCompression'
 
 export default {  
   components: {
-    ListTodo,
-    DetailTodo
+    MyTodo,    
   },
   data() {
     return {
       items: [],
-      dialog: false,
-      selItem: null
+      dlogFile: false,
+      selItem: null,
+      imgFile: null,
+
+      isLoading: false,
+      snackbar: false,
     }
   },
   mounted() {
-    this.getList()
-
-    // console.log(moment().day(0).format()) //this sunday
+    this.getList()    
   },
   computed: {
     // ...mapState([
@@ -57,13 +61,37 @@ export default {
       
     },
 
-    onShowDetail (item) {      
-      this.selItem = item
-      this.dialog = true
+    async compressImage (imageFile) {
+      try {
+        const MAX_IMAGE_SIZE_MB = 0.03 // 30KB
+        const compressedFile = await imageCompression(imageFile, MAX_IMAGE_SIZE_MB)
+        return compressedFile
+      } catch (error) {
+        return imageFile
+      }
     },
 
-    onAddTodo (item) {
-    
+    async handleImportFile (e) {
+      const MAX_IMAGE_SIZE = 30000 // 30KB
+      const file = e.target.files[0]
+
+      if (file.size > MAX_IMAGE_SIZE) {
+        this.imgFile = await this.compressImage(file)
+      } else {
+        this.imgFile = file
+      }      
+    },
+
+    onShowPhotoDlog (item) {
+      this.selItem = item
+      this.dlogFile = true
+    },
+
+    fileUpload () {
+      if(this.imgFile && this.selItem) {
+        this.isLoading = true
+
+      }
     }
   }
 }
