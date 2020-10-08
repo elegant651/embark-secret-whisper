@@ -28,15 +28,13 @@
             <div class="mx-auto d-flex justify-space-around">
               <div class="timeBox pa-2">
                 <div class="tbTitle ma-1">Start Time</div>
-                <!-- <div class="timestamp">12:00 AM, {{item.starttime}}</div> -->
+                <div class="timestamp">12:00 AM, {{startTime}}</div>
               </div>
               <div class="timeBox">
                 <div class="tbTitle ma-1">End Time</div>
-                <!-- <div class="timestamp">12:00 AM, {{item.endtime}}</div> -->
+                <div class="timestamp">12:00 AM, {{endTime}}</div>
               </div>
-            </div>
-
-            <input type="file" accept="image/*" v-on:change="this.handleImportFile" required />
+            </div>            
 
             <v-btn v-if="!isLoading" outlined @click="validate">POST</v-btn>
             <v-progress-circular indeterminate v-else></v-progress-circular>
@@ -49,8 +47,8 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters } from 'vuex'
-import imageCompression from '@/util/imageCompression'
 
 export default {
   data: () => ({    
@@ -63,13 +61,23 @@ export default {
       v => !!v || 'Rule is required',
       v => (v && v.length <= 255) || 'Rule must be less than 255 characters',
     ],
-    isLoading: false
+    isLoading: false,
+    startTime: '',
+    endTime: ''
   }),
 
   computed: {
     ...mapGetters('wallet', [
       
     ])
+  },
+
+  mounted() {
+    const startDate = moment().day(0).startOf('date').format("dddd, MMMM Do YYYY") // this sunday
+    const endDate = moment().day(6).endOf('date').format("dddd, MMMM Do YYYY") // this saturday
+
+    this.startTime = startDate
+    this.endTime = endDate
   },
 
   methods: {
@@ -83,26 +91,7 @@ export default {
       this.submit()
     },
 
-    async compressImage (imageFile) {
-      try {        
-        const MAX_IMAGE_SIZE_MB = 0.03 // 30KB
-        const compressedFile = await imageCompression(imageFile, MAX_IMAGE_SIZE_MB)
-        return compressedFile
-      } catch (error) {
-        return imageFile
-      }
-    },
-
-    async handleImportFile (e) {
-      const MAX_IMAGE_SIZE = 30000 // 30KB
-      const file = e.target.files[0]
-
-      if (file.size > MAX_IMAGE_SIZE) {
-        this.imgFile = await this.compressImage(file)
-      } else {
-        this.imgFile = file
-      }      
-    },
+    
 
     async submit () {
       try {
@@ -119,5 +108,25 @@ export default {
 </script>
 
 <style scoped>
+
+.timeBox .tbTitle {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #525457;
+}
+
+.timeBox .timestamp {
+  font-size: 15px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #17191d;
+}
 
 </style>

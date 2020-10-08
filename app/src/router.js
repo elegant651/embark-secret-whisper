@@ -49,6 +49,11 @@ export default new Router({
       component: () => import('./views/CreateTodo.vue')
     },
     {
+      path: '/my-todo',
+      name: 'myTodo',
+      component: () => import('./views/MyTodo.vue')
+    },
+    {
       path: '/marketplace',
       name: 'marketplace',
       component: () => import('./views/Marketplace.vue')

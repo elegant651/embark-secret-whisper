@@ -92,6 +92,7 @@
         { text: 'Home', route: '/' },
         { text: 'Chat', route: '/chat'},
         { text: 'Create Todo', route: '/create-todo'},
+        { text: 'My Todo', route: '/my-todo'},
         // { text: 'Feed', route: '/feed' },
         // { text: 'Secret Board', route: '/secret-board' },
         { text: 'Todo Feed', route: '/marketplace'}
