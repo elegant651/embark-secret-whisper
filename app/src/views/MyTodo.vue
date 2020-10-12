@@ -39,12 +39,14 @@ export default {
       dlogFile: false,
       selItem: null,
       imgFile: null,
+      ciFeed: null,
 
       isLoading: false,
       snackbar: false,
     }
   },
   mounted() {
+    this.ciFeed = new this.$web3.eth.Contract(this.$config.FEED_ABI, this.$config.FEED_CA)
     this.getList()    
   },
   computed: {
@@ -57,8 +59,23 @@ export default {
     //   'setMyProfile'
     // ]),
 
-    getList () {
-      
+    async getList () {
+      this.items = []
+
+      const count = await this.ciFeed.methods.getTotalTodoCount().call()
+      console.log(count)
+      for(let i=0; i<count; i++) {
+        const result = await this.ciFeed.methods.getTodo(i).call()        
+        this.items.push({
+          todoId: result[0],
+          owner: result[1],
+          title: result[2],
+          photo: 'https://gateway.ipfs.io/ipfs/'+result[3],
+          timestamp: result[4],
+          isVerified: result[5],
+          verifier: result[6]
+        })
+      }
     },
 
     async compressImage (imageFile) {
