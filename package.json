@@ -8,7 +8,16 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "devDependencies": {},
+  "devDependencies": {
+    "embark": "^5.3.0-nightly.7",
+    "embark-geth": "^5.3.0-nightly.7",
+    "embark-graph": "^5.3.0-nightly.7",
+    "embark-ipfs": "^5.3.0-nightly.7",
+    "embark-parity": "^5.3.0-nightly.7",
+    "embark-profiler": "^5.3.0-nightly.7",
+    "embark-swarm": "^5.3.0-nightly.7",
+    "embark-whisper-geth": "^5.3.0-nightly.7"
+  },
   "dependencies": {
     "zeppelin-solidity": "^1.12.0"
   }
