@@ -63,7 +63,8 @@ export default {
     ],
     isLoading: false,
     startTime: '',
-    endTime: ''
+    endTime: '',
+    ciFeed: null
   }),
 
   computed: {
@@ -73,6 +74,8 @@ export default {
   },
 
   mounted() {
+    this.ciFeed = new this.$web3.eth.Contract(this.$config.FEED_ABI, this.$config.FEED_CA)
+
     const startDate = moment().day(0).startOf('date').format("dddd, MMMM Do YYYY") // this sunday
     const endDate = moment().day(6).endOf('date').format("dddd, MMMM Do YYYY") // this saturday
 
@@ -91,12 +94,21 @@ export default {
       this.submit()
     },
 
-    
-
     async submit () {
       try {
         this.isLoading = true
         
+        await this.ciFeed.methods.createAuction(this.$config.MYNFT_CA, this.tokenId, this.todo.todoTitle, this.dataURI, price)
+        .send({from: this.address, gas: this.$config.GAS_AMOUNT})
+        .on('transactionHash', (transactionHash) => {
+          this.isLoading = false        
+          alert("Creation completed...! tx:"+transactionHash)
+          this.$router.push('/marketplace')
+        })      
+        .on('error', (error, receipt) => {
+          this.isLoading = false
+          alert(error)
+        });
 
       } catch (e) {
         this.isLoading = false
