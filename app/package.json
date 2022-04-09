@@ -13,7 +13,7 @@
     "eth-sig-util": "^2.5.3",
     "identicon.js": "^2.3.3",
     "js-sha256": "^0.9.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "timeago.js": "^4.0.0-beta.2",
     "tiptap": "^1.26.5",
     "tiptap-extensions": "^1.28.6",
